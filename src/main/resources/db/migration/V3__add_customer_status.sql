@@ -1,0 +1,2 @@
+ALTER TABLE customer
+    ADD COLUMN customer_status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE';
