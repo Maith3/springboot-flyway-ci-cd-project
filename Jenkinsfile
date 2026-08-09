@@ -119,17 +119,35 @@ pipeline {
         }
 
         stage('Rollback') {
-            when {
-                expression {
-                    params.ACTION == 'ROLLBACK'
-                }
-            }
+           when {
+               expression {
+                   params.ACTION == 'ROLLBACK'
+               }
+           }
 
-            steps {
-                echo 'Rollback workflow selected.'
-                echo 'Rollback logic will be added next.'
-            }
-        }
+           steps {
+               echo 'Rollback workflow selected.'
+               echo 'Executing Flyway undo...'
+
+               withCredentials([
+                   usernamePassword(
+                       credentialsId: 'flyway-db-credentials',
+                       usernameVariable: 'DB_USERNAME',
+                       passwordVariable: 'DB_PASSWORD'
+                   )
+               ]) {
+                   sh '''
+                       ./mvnw flyway:undo \
+                         -Duser.timezone=Asia/Kolkata \
+                         -Dflyway.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME} \
+                         -Dflyway.user=${DB_USERNAME} \
+                         -Dflyway.password=${DB_PASSWORD}
+                   '''
+               }
+
+               echo 'Flyway rollback completed successfully.'
+           }
+       }
     }
 
     post {
