@@ -1,5 +1,14 @@
+```groovy
 pipeline {
     agent any
+
+    parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['DEPLOY', 'ROLLBACK'],
+            description: 'Choose the pipeline action'
+        )
+    }
 
     environment {
         DB_HOST = 'host.docker.internal'
@@ -16,6 +25,12 @@ pipeline {
         }
 
         stage('Test') {
+            when {
+                expression {
+                    params.ACTION == 'DEPLOY'
+                }
+            }
+
             steps {
                 withCredentials([
                     usernamePassword(
@@ -38,6 +53,12 @@ pipeline {
         }
 
         stage('Flyway Validate') {
+            when {
+                expression {
+                    params.ACTION == 'DEPLOY'
+                }
+            }
+
             steps {
                 withCredentials([
                     usernamePassword(
@@ -58,6 +79,12 @@ pipeline {
         }
 
         stage('Flyway Migrate') {
+            when {
+                expression {
+                    params.ACTION == 'DEPLOY'
+                }
+            }
+
             steps {
                 withCredentials([
                     usernamePassword(
@@ -78,11 +105,30 @@ pipeline {
         }
 
         stage('Package') {
+            when {
+                expression {
+                    params.ACTION == 'DEPLOY'
+                }
+            }
+
             steps {
                 sh '''
                     ./mvnw package -DskipTests \
                       -Duser.timezone=Asia/Kolkata
                 '''
+            }
+        }
+
+        stage('Rollback') {
+            when {
+                expression {
+                    params.ACTION == 'ROLLBACK'
+                }
+            }
+
+            steps {
+                echo 'Rollback workflow selected.'
+                echo 'Rollback logic will be added next.'
             }
         }
     }
@@ -98,4 +144,5 @@ pipeline {
     }
 }
 
-//Github webhook trigger test
+// Github webhook trigger test
+```
