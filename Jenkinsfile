@@ -1,4 +1,3 @@
-```groovy
 pipeline {
     agent any
 
@@ -145,4 +144,3 @@ pipeline {
 }
 
 // Github webhook trigger test
-```
