@@ -137,6 +137,7 @@ pipeline {
                    )
                ]) {
                    sh '''
+                       chmod +x mvnw
                        ./mvnw flyway:undo \
                          -Duser.timezone=Asia/Kolkata \
                          -Dflyway.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME} \
