@@ -117,6 +117,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Rollback') {
             when {
                 expression {
@@ -139,13 +140,11 @@ pipeline {
                         echo "        AUTOMATED FLYWAY ROLLBACK"
                         echo "========================================="
 
-                        chmod +x mvnw
-
                         ROLLBACK_DIR="src/main/resources/db/rollback"
 
                         echo "Checking Flyway migration history..."
 
-                        // Get the latest successful migration.
+                        # Get the latest successful migration.
                         MIGRATION_INFO=$(PGPASSWORD="${DB_PASSWORD}" psql \
                             -h "${DB_HOST}" \
                             -p "${DB_PORT}" \
@@ -174,9 +173,12 @@ pipeline {
                         echo "  installed_rank = ${INSTALLED_RANK}"
                         echo "  version        = ${VERSION}"
 
-                        // Find the rollback script corresponding to the version.
-                        ROLLBACK_FILES=$(find "${ROLLBACK_DIR}" -maxdepth 1 -type f \
-                            -name "U${VERSION}__*.sql" -print)
+                        # Find the rollback script corresponding to the version.
+                        ROLLBACK_FILES=$(find "${ROLLBACK_DIR}" \
+                            -maxdepth 1 \
+                            -type f \
+                            -name "U${VERSION}__*.sql" \
+                            -print)
 
                         ROLLBACK_COUNT=$(printf '%s\\n' "${ROLLBACK_FILES}" | \
                             sed '/^$/d' | wc -l)
@@ -200,9 +202,6 @@ pipeline {
 
                         echo "Starting atomic rollback transaction..."
 
-                        export ROLLBACK_FILE
-                        export INSTALLED_RANK
-
                         PGPASSWORD="${DB_PASSWORD}" psql \
                             -h "${DB_HOST}" \
                             -p "${DB_PORT}" \
@@ -212,29 +211,34 @@ pipeline {
                             -v rollback_file="${ROLLBACK_FILE}" \
                             -v installed_rank="${INSTALLED_RANK}" <<'SQL'
 
-        BEGIN;
+BEGIN;
 
-        // Execute the dynamically selected rollback script.
-        \\i :rollback_file
+-- Execute the dynamically selected rollback script.
+\\i :rollback_file
 
-        // Remove exactly the migration that was rolled back.
-        DELETE FROM flyway_schema_history
-        WHERE installed_rank = :installed_rank
-          AND success = true;
+-- Remove exactly the migration that was rolled back.
+DELETE FROM flyway_schema_history
+WHERE installed_rank = :installed_rank
+  AND success = true;
 
-        // Make sure exactly one history row was removed.
-        DO $$
-        BEGIN
-            GET DIAGNOSTICS deleted_rows = ROW_COUNT;
-            IF deleted_rows <> 1 THEN
-                RAISE EXCEPTION 'Expected to delete exactly one history row, but deleted %.', deleted_rows;
-            END IF;
-        END
-        $$;
+-- Make sure exactly one history row was removed.
+DO $$
+DECLARE
+    deleted_rows INTEGER;
+BEGIN
+    GET DIAGNOSTICS deleted_rows = ROW_COUNT;
 
-        COMMIT;
+    IF deleted_rows <> 1 THEN
+        RAISE EXCEPTION
+            'Expected to delete exactly one history row, but deleted %.',
+            deleted_rows;
+    END IF;
+END
+$$;
 
-        SQL
+COMMIT;
+
+SQL
 
                         echo "========================================="
                         echo "Rollback transaction committed successfully."
@@ -264,10 +268,11 @@ pipeline {
 
                         echo "Verification successful."
                         echo "Migration ${VERSION} has been rolled back."
-                       '''
-                    }
+                    '''
                 }
             }
+        }
+    }
 
     post {
         success {
