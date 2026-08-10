@@ -217,15 +217,14 @@ BEGIN;
 \\i :rollback_file
 
 -- Remove exactly the migration that was rolled back.
-DELETE FROM flyway_schema_history
-WHERE installed_rank = :installed_rank
-  AND success = true;
-
--- Make sure exactly one history row was removed.
 DO $$
 DECLARE
     deleted_rows INTEGER;
 BEGIN
+    DELETE FROM flyway_schema_history
+    WHERE installed_rank = :installed_rank
+      AND success = true;
+
     GET DIAGNOSTICS deleted_rows = ROW_COUNT;
 
     IF deleted_rows <> 1 THEN
