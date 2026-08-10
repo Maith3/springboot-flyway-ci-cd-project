@@ -134,7 +134,6 @@ pipeline {
                 ]) {
                     sh '''
                         set -e
-                        '''
 
                         echo "========================================="
                         echo "        AUTOMATED FLYWAY ROLLBACK"
@@ -216,7 +215,7 @@ pipeline {
         BEGIN;
 
         // Execute the dynamically selected rollback script.
-        \i :rollback_file
+        \\i :rollback_file
 
         // Remove exactly the migration that was rolled back.
         DELETE FROM flyway_schema_history
@@ -265,10 +264,10 @@ pipeline {
 
                         echo "Verification successful."
                         echo "Migration ${VERSION} has been rolled back."
+                       '''
                     }
                 }
             }
-        }
 
     post {
         success {
