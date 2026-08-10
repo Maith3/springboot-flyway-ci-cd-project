@@ -214,7 +214,7 @@ pipeline {
 BEGIN;
 
 -- Execute the dynamically selected rollback script.
-\i :rollback_file
+\\i :rollback_file
 
 -- Remove exactly the migration that was rolled back.
 DO $$
