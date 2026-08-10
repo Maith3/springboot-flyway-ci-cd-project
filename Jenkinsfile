@@ -209,12 +209,12 @@ pipeline {
                             -d "${DB_NAME}" \
                             -v ON_ERROR_STOP=1 \
                             -v rollback_file="${ROLLBACK_FILE}" \
-                            -v installed_rank="${INSTALLED_RANK}" <<'SQL'
+                            -v installed_rank="${INSTALLED_RANK}" <<SQL
 
 BEGIN;
 
 -- Execute the dynamically selected rollback script.
-\\i :rollback_file
+\i :rollback_file
 
 -- Remove exactly the migration that was rolled back.
 DO $$
@@ -222,7 +222,7 @@ DECLARE
     deleted_rows INTEGER;
 BEGIN
     DELETE FROM flyway_schema_history
-    WHERE installed_rank = :installed_rank
+    WHERE installed_rank = ${INSTALLED_RANK}
       AND success = true;
 
     GET DIAGNOSTICS deleted_rows = ROW_COUNT;
