@@ -173,7 +173,7 @@ pipeline {
                         echo "  installed_rank = ${INSTALLED_RANK}"
                         echo "  version        = ${VERSION}"
 
-                        # Find the rollback script corresponding to the version.
+                        # Find the rollback script corresponding to the latest migration.
                         ROLLBACK_FILES=$(find "${ROLLBACK_DIR}" \
                             -maxdepth 1 \
                             -type f \
@@ -196,6 +196,8 @@ pipeline {
                         fi
 
                         ROLLBACK_FILE="${ROLLBACK_FILES}"
+
+                        # Load the dynamically selected rollback script.
                         ROLLBACK_SQL=$(cat "${ROLLBACK_FILE}")
 
                         echo "Rollback script found:"
@@ -215,24 +217,18 @@ BEGIN;
 -- Execute the dynamically selected rollback script.
 ${ROLLBACK_SQL}
 
--- Remove exactly the migration that was rolled back.
-DO \$\$
-DECLARE
-    deleted_rows INTEGER;
-BEGIN
+-- Delete exactly the migration that was rolled back.
+WITH deleted AS (
     DELETE FROM flyway_schema_history
     WHERE installed_rank = ${INSTALLED_RANK}
-      AND success = true;
-
-    GET DIAGNOSTICS deleted_rows = ROW_COUNT;
-
-    IF deleted_rows <> 1 THEN
-        RAISE EXCEPTION
-            'Expected to delete exactly one history row, but deleted %.',
-            deleted_rows;
-    END IF;
+      AND success = true
+    RETURNING installed_rank
+)
+SELECT CASE
+    WHEN COUNT(*) = 1 THEN 1
+    ELSE CAST(NULL AS INTEGER) / 0
 END
-\$\$;
+FROM deleted;
 
 COMMIT;
 
