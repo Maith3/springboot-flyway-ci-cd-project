@@ -196,6 +196,7 @@ pipeline {
                         fi
 
                         ROLLBACK_FILE="${ROLLBACK_FILES}"
+                        ROLLBACK_SQL=$(cat "${ROLLBACK_FILE}")
 
                         echo "Rollback script found:"
                         echo "  ${ROLLBACK_FILE}"
@@ -207,17 +208,15 @@ pipeline {
                             -p "${DB_PORT}" \
                             -U "${DB_USERNAME}" \
                             -d "${DB_NAME}" \
-                            -v ON_ERROR_STOP=1 \
-                            -v rollback_file="${ROLLBACK_FILE}" \
-                            -v installed_rank="${INSTALLED_RANK}" <<SQL
+                            -v ON_ERROR_STOP=1 <<SQL
 
 BEGIN;
 
 -- Execute the dynamically selected rollback script.
-\\i :rollback_file
+${ROLLBACK_SQL}
 
 -- Remove exactly the migration that was rolled back.
-DO $$
+DO \$\$
 DECLARE
     deleted_rows INTEGER;
 BEGIN
@@ -233,7 +232,7 @@ BEGIN
             deleted_rows;
     END IF;
 END
-$$;
+\$\$;
 
 COMMIT;
 
