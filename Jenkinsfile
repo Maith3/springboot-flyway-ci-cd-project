@@ -279,5 +279,3 @@ pipeline {
         }
     }
 }
-
-// Github webhook trigger test
