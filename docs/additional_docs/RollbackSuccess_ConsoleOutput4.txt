@@ -1,0 +1,179 @@
+Started by user Maithreyi NS
+Obtained Jenkinsfile from git https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/springboot-flyway-cicd
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+ > git rev-list --no-walk 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+Stage "Test" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Validate)
+Stage "Flyway Validate" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Migrate)
+Stage "Flyway Migrate" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Package)
+Stage "Package" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Rollback)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DB_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ set -e
++ echo =========================================
+=========================================
++ echo         AUTOMATED FLYWAY ROLLBACK
+        AUTOMATED FLYWAY ROLLBACK
++ echo =========================================
+=========================================
++ ROLLBACK_DIR=src/main/resources/db/rollback
++ echo Checking Flyway migration history...
+Checking Flyway migration history...
++ PGPASSWORD=**** psql -h host.docker.internal -p 5432 -U devuser -d flyway_dev -t -A -F | -c 
+                                SELECT installed_rank, version
+                                FROM flyway_schema_history
+                                WHERE success = true
+                                ORDER BY installed_rank DESC
+                                LIMIT 1;
+                            
++ MIGRATION_INFO=5|5
++ [ -z 5|5 ]
++ echo 5|5
++ cut -d| -f1
++ INSTALLED_RANK=5
++ echo 5|5
++ cut -d| -f2
++ VERSION=5
++ echo Latest successful migration:
+Latest successful migration:
++ echo   installed_rank = 5
+  installed_rank = 5
++ echo   version        = 5
+  version        = 5
++ find src/main/resources/db/rollback -maxdepth 1 -type f -name U5__*.sql -print
++ ROLLBACK_FILES=src/main/resources/db/rollback/U5__rollback_account_status.sql
++ printf %s\n src/main/resources/db/rollback/U5__rollback_account_status.sql
++ sed /^$/d
++ wc -l
++ ROLLBACK_COUNT=1
++ [ 1 -eq 0 ]
++ [ 1 -gt 1 ]
++ ROLLBACK_FILE=src/main/resources/db/rollback/U5__rollback_account_status.sql
++ cat src/main/resources/db/rollback/U5__rollback_account_status.sql
++ ROLLBACK_SQL=ALTER TABLE customer_account
+DROP COLUMN account_status;
++ echo Rollback script found:
+Rollback script found:
++ echo   src/main/resources/db/rollback/U5__rollback_account_status.sql
+  src/main/resources/db/rollback/U5__rollback_account_status.sql
++ echo Starting atomic rollback transaction...
+Starting atomic rollback transaction...
++ PGPASSWORD=**** psql -h host.docker.internal -p 5432 -U devuser -d flyway_dev -v ON_ERROR_STOP=1
+BEGIN
+ALTER TABLE
+ case 
+------
+    1
+(1 row)
+
+COMMIT
++ echo =========================================
+=========================================
++ echo Rollback transaction committed successfully.
+Rollback transaction committed successfully.
++ echo Rolled back migration version: 5
+Rolled back migration version: 5
++ echo =========================================
+=========================================
++ echo Verifying rollback...
+Verifying rollback...
++ PGPASSWORD=**** psql -h host.docker.internal -p 5432 -U devuser -d flyway_dev -t -A -c 
+                                SELECT COUNT(*)
+                                FROM flyway_schema_history
+                                WHERE installed_rank = 5
+                                  AND success = true;
+                            
++ REMAINING=0
++ [ 0 -ne 0 ]
++ echo Verification successful.
+Verification successful.
++ echo Migration 5 has been rolled back.
+Migration 5 has been rolled back.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+CI/CD pipeline completed successfully!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

@@ -1,0 +1,275 @@
+Started by GitHub push by Maith3
+Obtained Jenkinsfile from git https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/springboot-flyway-cicd
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+ > git rev-list --no-walk 9dd9b5ec20ddce21fea38fcae48b1203a0293b84 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DB_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ chmod +x mvnw
++ ./mvnw clean test -Duser.timezone=Asia/Kolkata -Dspring.datasource.url=jdbc:postgresql://host.docker.internal:5432/flyway_dev -Dspring.datasource.username=devuser -Dspring.datasource.password=****
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.demo:flyway-jenkins-project >-------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ flyway-jenkins-project ---
+[INFO] Deleting /var/jenkins_home/workspace/springboot-flyway-cicd/target
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ flyway-jenkins-project ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 6 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ flyway-jenkins-project ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ flyway-jenkins-project ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/springboot-flyway-cicd/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ flyway-jenkins-project ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ flyway-jenkins-project ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests
+19:14:16.654 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests]: FlywayJenkinsProjectApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:14:16.811 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplication for test class com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests
+19:14:16.948 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests]: FlywayJenkinsProjectApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:14:16.951 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplication for test class com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-08-11T19:14:17.472+05:30  INFO 9470 --- [           main] d.f.FlywayJenkinsProjectApplicationTests : Starting FlywayJenkinsProjectApplicationTests using Java 21.0.11 with PID 9470 (started by jenkins in /var/jenkins_home/workspace/springboot-flyway-cicd)
+2026-08-11T19:14:17.474+05:30  INFO 9470 --- [           main] d.f.FlywayJenkinsProjectApplicationTests : No active profile set, falling back to 1 default profile: "default"
+2026-08-11T19:14:18.380+05:30  INFO 9470 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-11T19:14:18.408+05:30  INFO 9470 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 0 JPA repository interfaces.
+2026-08-11T19:14:19.099+05:30  INFO 9470 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-08-11T19:14:19.412+05:30  INFO 9470 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@8ac12e6
+2026-08-11T19:14:19.415+05:30  INFO 9470 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-08-11T19:14:19.456+05:30  INFO 9470 --- [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://host.docker.internal:5432/flyway_dev (PostgreSQL 16.14)
+2026-08-11T19:14:19.611+05:30  INFO 9470 --- [           main] o.f.core.internal.command.DbValidate     : Successfully validated 5 migrations (execution time 00:00.066s)
+2026-08-11T19:14:19.659+05:30  INFO 9470 --- [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 4
+2026-08-11T19:14:19.695+05:30  INFO 9470 --- [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - add account status"
+2026-08-11T19:14:19.770+05:30  INFO 9470 --- [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v5 (execution time 00:00.031s)
+2026-08-11T19:14:19.987+05:30  INFO 9470 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-11T19:14:20.162+05:30  INFO 9470 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-08-11T19:14:20.957+05:30  INFO 9470 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-11T19:14:21.150+05:30  INFO 9470 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://host.docker.internal:5432/flyway_dev]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.14
+	Default catalog/schema: flyway_dev/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-08-11T19:14:21.760+05:30  INFO 9470 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-11T19:14:21.774+05:30  INFO 9470 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-11T19:14:21.911+05:30  WARN 9470 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-11T19:14:22.591+05:30  INFO 9470 --- [           main] d.f.FlywayJenkinsProjectApplicationTests : Started FlywayJenkinsProjectApplicationTests in 5.53 seconds (process running for 7.473)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/var/jenkins_home/.m2/repository/net/bytebuddy/byte-buddy-agent/1.18.10/byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.098 s -- in com.demo.flyway_jenkins_project.FlywayJenkinsProjectApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  12.573 s
+[INFO] Finished at: 2026-08-11T19:14:23+05:30
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Validate)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DB_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ ./mvnw flyway:validate -Duser.timezone=Asia/Kolkata -Dflyway.url=jdbc:postgresql://host.docker.internal:5432/flyway_dev -Dflyway.user=devuser -Dflyway.password=****
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.demo:flyway-jenkins-project >-------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- flyway:12.4.0:validate (default-cli) @ flyway-jenkins-project ---
+[INFO] Database: jdbc:postgresql://host.docker.internal:5432/flyway_dev (PostgreSQL 16.14)
+[INFO] Successfully validated 5 migrations (execution time 00:00.058s)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.337 s
+[INFO] Finished at: 2026-08-11T19:14:28+05:30
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Migrate)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DB_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ ./mvnw flyway:migrate -Duser.timezone=Asia/Kolkata -Dflyway.url=jdbc:postgresql://host.docker.internal:5432/flyway_dev -Dflyway.user=devuser -Dflyway.password=****
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.demo:flyway-jenkins-project >-------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- flyway:12.4.0:migrate (default-cli) @ flyway-jenkins-project ---
+[INFO] Database: jdbc:postgresql://host.docker.internal:5432/flyway_dev (PostgreSQL 16.14)
+[INFO] Successfully validated 5 migrations (execution time 00:00.061s)
+[INFO] Current version of schema "public": 5
+[INFO] Schema "public" is up to date. No migration necessary.
+[INFO] Database: jdbc:postgresql://host.docker.internal:5432/flyway_dev (PostgreSQL 16.14)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.426 s
+[INFO] Finished at: 2026-08-11T19:14:33+05:30
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Package)
+[Pipeline] sh
++ ./mvnw package -DskipTests -Duser.timezone=Asia/Kolkata
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.demo:flyway-jenkins-project >-------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ flyway-jenkins-project ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 6 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ flyway-jenkins-project ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ flyway-jenkins-project ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/springboot-flyway-cicd/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ flyway-jenkins-project ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ flyway-jenkins-project ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.5.0:jar (default-jar) @ flyway-jenkins-project ---
+[INFO] Building jar: /var/jenkins_home/workspace/springboot-flyway-cicd/target/flyway-jenkins-project-0.0.1-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:4.1.0:repackage (repackage) @ flyway-jenkins-project ---
+[INFO] Replacing main artifact /var/jenkins_home/workspace/springboot-flyway-cicd/target/flyway-jenkins-project-0.0.1-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /var/jenkins_home/workspace/springboot-flyway-cicd/target/flyway-jenkins-project-0.0.1-SNAPSHOT.jar.original
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.625 s
+[INFO] Finished at: 2026-08-11T19:14:39+05:30
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Rollback)
+Stage "Rollback" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+CI/CD pipeline completed successfully!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

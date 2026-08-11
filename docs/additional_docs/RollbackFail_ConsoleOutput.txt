@@ -1,0 +1,143 @@
+Started by user Maithreyi NS
+Obtained Jenkinsfile from git https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/springboot-flyway-cicd
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+ > git rev-list --no-walk 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/springboot-flyway-cicd/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/Maith3/springboot-flyway-ci-cd-project.git # timeout=10
+Fetching upstream changes from https://github.com/Maith3/springboot-flyway-ci-cd-project.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/Maith3/springboot-flyway-ci-cd-project.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6891b245b55e6768bac335d73cdadf5c44f47cd9 (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6891b245b55e6768bac335d73cdadf5c44f47cd9 # timeout=10
+Commit message: "Testing Jenkins pipeline"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+Stage "Test" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Validate)
+Stage "Flyway Validate" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Flyway Migrate)
+Stage "Flyway Migrate" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Package)
+Stage "Package" skipped due to when conditional
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Rollback)
+[Pipeline] withCredentials
+Masking supported pattern matches of $DB_PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ set -e
++ echo =========================================
+=========================================
++ echo         AUTOMATED FLYWAY ROLLBACK
+        AUTOMATED FLYWAY ROLLBACK
++ echo =========================================
+=========================================
++ ROLLBACK_DIR=src/main/resources/db/rollback
++ echo Checking Flyway migration history...
+Checking Flyway migration history...
++ PGPASSWORD=**** psql -h host.docker.internal -p 5432 -U devuser -d flyway_dev -t -A -F | -c 
+                                SELECT installed_rank, version
+                                FROM flyway_schema_history
+                                WHERE success = true
+                                ORDER BY installed_rank DESC
+                                LIMIT 1;
+                            
++ MIGRATION_INFO=4|4
++ [ -z 4|4 ]
++ echo 4|4
++ cut -d| -f1
++ INSTALLED_RANK=4
++ echo 4|4
++ cut -d| -f2
++ VERSION=4
++ echo Latest successful migration:
+Latest successful migration:
++ echo   installed_rank = 4
+  installed_rank = 4
++ echo   version        = 4
+  version        = 4
++ find src/main/resources/db/rollback -maxdepth 1 -type f -name U4__*.sql -print
++ ROLLBACK_FILES=
++ printf %s\n 
++ sed /^$/d
++ wc -l
++ ROLLBACK_COUNT=0
++ [ 0 -eq 0 ]
++ echo ERROR: No rollback script found for version 4.
+ERROR: No rollback script found for version 4.
++ echo Expected: src/main/resources/db/rollback/U4__*.sql
+Expected: src/main/resources/db/rollback/U4__*.sql
++ exit 1
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+CI/CD pipeline failed.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
